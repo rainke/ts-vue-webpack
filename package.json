@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack",
+    "build": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack --config webpack.config.prod.ts",
     "dev": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server --inline --progress"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@types/html-webpack-plugin": "^3.2.0",
+    "@types/mini-css-extract-plugin": "^0.2.0",
     "@types/node": "^10.12.15",
     "@types/webpack": "^4.4.21",
     "@types/webpack-dev-server": "^3.1.1",
@@ -21,6 +22,7 @@
     "cache-loader": "^1.2.5",
     "cross-env": "^5.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.5.0",
     "ts-loader": "^5.3.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.2.2",

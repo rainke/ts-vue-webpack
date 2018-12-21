@@ -1,27 +1,34 @@
-import webpack from "webpack";
-import path from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import merge from "webpack-merge";
-import { resolve } from "./build/utils";
-import baseConfig from "./webpack.config.base";
+import webpack from 'webpack';
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import merge from 'webpack-merge';
+import { resolve, styleLoaders } from './build/utils';
+import baseConfig from './webpack.config.base';
 
 const config: webpack.Configuration = merge(baseConfig, {
-  mode: "development",
-  devtool: "cheap-module-source-map",
+  mode: 'development',
+  output: {
+    path: resolve('dist'),
+    filename: '[name].js',
+    publicPath: '/',
+    // https://github.com/webpack/webpack/issues/6642
+    globalObject: 'this'
+  },
+  devtool: 'cheap-module-source-map',
   devServer: {
-    clientLogLevel: "warning",
+    clientLogLevel: 'warning',
     historyApiFallback: {
       disableDotRule: true,
-      rewrites: [{ from: /.*/, to: path.posix.join("/", "index.html") }]
+      rewrites: [{ from: /.*/, to: path.posix.join('/', 'index.html') }]
     },
     hot: true,
-    contentBase: resolve("public"),
+    contentBase: resolve('public'),
     compress: false,
-    host: "localhost",
+    host: 'localhost',
     port: 8050,
     open: false,
     overlay: { warnings: false, errors: true }, // 在页面显示编译错误提示
-    publicPath: "/",
+    publicPath: '/',
     proxy: {},
     quiet: true,
     watchOptions: {
@@ -29,11 +36,14 @@ const config: webpack.Configuration = merge(baseConfig, {
     }
   },
   module: {
-    rules: []
+    rules: styleLoaders({
+      sourceMap: true,
+      usePostCSS: true
+    })
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env": {
+      'process.env': {
         NODE_ENV: '"development"',
         BASE_URL: '"/"'
       }
@@ -42,7 +52,7 @@ const config: webpack.Configuration = merge(baseConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.ProgressPlugin(),
     new HtmlWebpackPlugin({
-      template: "public/index.html"
+      template: 'public/index.html'
     })
   ]
 });
