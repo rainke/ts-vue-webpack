@@ -17,7 +17,7 @@ const baseConfig: webpack.Configuration = {
     // noParse: /^(vue)$/, // 第三方库，配合resolve.alias
     rules: [
       {
-        test: /.ts$/,
+        test: /\.ts$/,
         use: [
           {
             loader: 'cache-loader',
@@ -28,6 +28,28 @@ const baseConfig: webpack.Configuration = {
           },
           'babel-loader',
           'ts-loader'
+        ]
+      },
+      {
+        test: /\.vue$/,
+        use: [
+          {
+            loader: 'cache-loader',
+            options: {
+              cacheDirectory: resolve('node_modules/.cache/vue-loader'),
+              cacheIdentifier: '15.4.2'
+            }
+          },
+          {
+            loader: 'vue-loader',
+            options: {
+              compilerOptions: {
+                preserveWhitespace: false
+              },
+              cacheDirectory: resolve('node_modules/.cache/vue-loader'),
+              cacheIdentifier: '15.4.2'
+            }
+          }
         ]
       },
       {

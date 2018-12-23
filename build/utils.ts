@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import MiniCssExtractPlugin  from 'mini-css-extract-plugin';
 
 const rootDir = process.cwd();
 
@@ -13,10 +13,16 @@ interface Options {
 }
 
 export const cssLoaders = (options:Options) => {
+  const firstLoader = options.extract
+    ? MiniCssExtractPlugin.loader
+    : 'style-loader';
+
   const cssLoader: webpack.RuleSetLoader = {
     loader: 'css-loader',
     options: {
-      sourceMap: options.sourceMap
+      sourceMap: options.sourceMap,
+      modules: options.modules ? true: false,
+      localIdentName: options.modules ? '[name]__[local]__[hash:base64:5]' : void 0
     }
   };
 
@@ -27,29 +33,23 @@ export const cssLoaders = (options:Options) => {
     }
   };
 
-  function generateLoaders(loader?: string, loaderOptions?: Options) {
-    const loaders: webpack.RuleSetUse[] = ['style-loader', cssLoader, postcssLoader]
-
-    if (loader) {
-      loaders.push({
-        loader: loader + '-loader',
-        options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
-        })
-      });
-    }
-    if (options.extract) {
-    } else {
-      return (['vue-style-loader'] as webpack.RuleSetUse[]).concat(loaders);
-    }
+  function generateLoaders(loader?: webpack.RuleSetUse) {
+    const loaders: webpack.RuleSetUse[] = [firstLoader, cssLoader, postcssLoader];
+    loader && loaders.push(loader);
+    return loaders;
   }
   return {
-    css: generateLoaders(),
-    postcss: generateLoaders(),
-    less: generateLoaders('less')
+    // css: generateLoaders(),
+    less: generateLoaders({
+      loader: 'less-loader',
+      options: {
+        sourceMap: options.sourceMap
+      }
+    })
   };
 };
-export const styleLoaders = function(options: Options) {
+
+export const styleLoaders = function(options: Options = {}) {
   const output: webpack.RuleSetRule[] = [];
   const loaders = cssLoaders(options);
 
@@ -57,9 +57,15 @@ export const styleLoaders = function(options: Options) {
     const loader = loaders[extension];
     output.push({
       test: new RegExp('\\.' + extension + '$'),
+      include: /modules?\.less$/,
       use: loader
     });
+    output.push({
+      test: new RegExp('\\.' + extension + '$'),
+      exclude: /modules?\.less$/,
+      use: loader
+    })
   }
-
+  console.log(JSON.stringify(output, null, 2));
   return output;
 };

@@ -26,7 +26,7 @@ const config: webpack.Configuration = merge(baseConfig, {
     compress: false,
     host: 'localhost',
     port: 8050,
-    open: false,
+    open: true,
     overlay: { warnings: false, errors: true }, // 在页面显示编译错误提示
     publicPath: '/',
     proxy: {},
@@ -38,7 +38,7 @@ const config: webpack.Configuration = merge(baseConfig, {
   module: {
     rules: styleLoaders({
       sourceMap: true,
-      usePostCSS: true
+      modules: true
     })
   },
   plugins: [

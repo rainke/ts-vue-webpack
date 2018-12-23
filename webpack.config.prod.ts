@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import merge from 'webpack-merge';
 import { resolve, styleLoaders } from './build/utils';
 import baseConfig from './webpack.config.base';
@@ -17,8 +18,7 @@ const config: webpack.Configuration = merge(baseConfig, {
   module: {
     rules: styleLoaders({
       sourceMap: true,
-      extract: true,
-      usePostCSS: true
+      extract: true
     })
   },
   plugins: [
@@ -30,6 +30,9 @@ const config: webpack.Configuration = merge(baseConfig, {
     }),
     new HtmlWebpackPlugin({
       template: 'public/index.html'
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css'
     })
   ]
 });
