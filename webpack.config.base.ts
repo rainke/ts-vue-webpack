@@ -1,9 +1,11 @@
 import webpack from 'webpack';
 import { resolve } from './build/utils';
+import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
+import VueLoader from 'vue-loader';
 
 const baseConfig: webpack.Configuration = {
   entry: {
-    app: ['./src/main.ts']
+    app: []
   },
   resolve: {
     extensions: ['.js', '.ts', '.json'],
@@ -29,6 +31,16 @@ const baseConfig: webpack.Configuration = {
           'babel-loader',
           'ts-loader'
         ]
+      },
+      {
+        test:/\.jsx?$/,
+        use: [{
+          loader: 'cache-loader',
+          options: {
+            cacheDirectory: resolve('node_modules/.cache/babel-loader'),
+            cacheIdentifier: '6.3.1'
+          }
+        }, {loader: 'babel-loader'}]
       },
       {
         test: /\.vue$/,
@@ -100,7 +112,13 @@ const baseConfig: webpack.Configuration = {
       }
     ]
   },
-  plugins: []
+  plugins: [
+    new VueLoader.VueLoaderPlugin(),
+    new FriendlyErrorsWebpackPlugin({
+      additionalFormatters: [],
+      additionalTransformers: []
+    })
+  ]
 };
 
 export default baseConfig;

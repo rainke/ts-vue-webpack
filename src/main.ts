@@ -1,2 +1,8 @@
 import './main.less';
-console.log(3);
+import main from './main.vue';
+import Vue from 'vue';
+console.log(main);
+
+new Vue({
+    render: h => h(main)
+}).$mount('#root')

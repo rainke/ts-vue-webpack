@@ -7,6 +7,13 @@ import baseConfig from './webpack.config.base';
 
 const config: webpack.Configuration = merge(baseConfig, {
   mode: 'development',
+  entry: {
+    app:  [
+      require.resolve(`webpack-dev-server/client`),
+      require.resolve('webpack/hot/dev-server'),
+      './src/main.ts'
+    ]
+  },
   output: {
     path: resolve('dist'),
     filename: 'js/[name].js',

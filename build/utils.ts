@@ -66,6 +66,5 @@ export const styleLoaders = function(options: Options = {}) {
       use: loader
     })
   }
-  console.log(JSON.stringify(output, null, 2));
   return output;
 };

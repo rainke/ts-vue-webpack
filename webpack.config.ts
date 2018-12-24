@@ -7,6 +7,13 @@ import baseConfig from './webpack.config.base';
 
 const config: webpack.Configuration = merge(baseConfig, {
   mode: 'development',
+  entry: {
+    app:  [
+      'webpack-dev-server/client?http://127.0.0.1:8050/sockjs-node',
+      'webpack/hot/dev-server',
+      './src/main.ts'
+    ]
+  },
   output: {
     path: resolve('dist'),
     filename: '[name].js',
@@ -23,6 +30,7 @@ const config: webpack.Configuration = merge(baseConfig, {
     },
     hot: true,
     contentBase: resolve('public'),
+    watchContentBase: true, // 联合contentBase,修改public的文件时自动刷新浏览器
     compress: false,
     host: 'localhost',
     port: 8050,
@@ -48,11 +56,13 @@ const config: webpack.Configuration = merge(baseConfig, {
         BASE_URL: '"/"'
       }
     }),
+    // TODO: openBrowserPlugin
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.ProgressPlugin(),
     new HtmlWebpackPlugin({
-      template: 'public/index.html'
+      template: 'public/index.html',
+      inject: true
     })
   ]
 });
