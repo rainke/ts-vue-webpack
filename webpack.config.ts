@@ -2,14 +2,16 @@ import webpack from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import merge from 'webpack-merge';
+import openBrowserPlugin from './build/plugins/OpenBrowser';
 import { resolve, styleLoaders } from './build/utils';
+import config from './build/config';
 import baseConfig from './webpack.config.base';
 
-const config: webpack.Configuration = merge(baseConfig, {
+const webpackDevConfig: webpack.Configuration = merge(baseConfig, {
   mode: 'development',
   entry: {
     app:  [
-      'webpack-dev-server/client?http://127.0.0.1:8050/sockjs-node',
+      `webpack-dev-server/client?http://127.0.0.1:${config.port}/sockjs-node`,
       'webpack/hot/dev-server',
       './src/main.ts'
     ]
@@ -33,8 +35,8 @@ const config: webpack.Configuration = merge(baseConfig, {
     watchContentBase: true, // 联合contentBase,修改public的文件时自动刷新浏览器
     compress: false,
     host: 'localhost',
-    port: 8050,
-    open: true,
+    port: config.port,
+    // open: false,
     overlay: { warnings: false, errors: true }, // 在页面显示编译错误提示
     publicPath: '/',
     proxy: {},
@@ -56,7 +58,7 @@ const config: webpack.Configuration = merge(baseConfig, {
         BASE_URL: '"/"'
       }
     }),
-    // TODO: openBrowserPlugin
+    new openBrowserPlugin({url: `http://localhost:${config.port}`}),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.ProgressPlugin(),
@@ -67,4 +69,4 @@ const config: webpack.Configuration = merge(baseConfig, {
   ]
 });
 
-export default config;
+export default webpackDevConfig;
