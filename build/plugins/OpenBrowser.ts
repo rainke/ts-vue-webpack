@@ -1,8 +1,6 @@
 import webpack from 'webpack';
 import opn from 'opn';
 
-console.log('11111111111111111111111111');
-
 interface OpenBrowserPluginOptions {
   url?: string;
 }
